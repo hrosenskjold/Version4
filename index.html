@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <!-- Navn på tab -->
+        <title>Center for Marin Naturgenopretning</title>
+
+        <!-- Her indlæses diverse eksterne libaries -->
+        
+        <link rel="stylesheet" href="src/leaflet.css">
+        <link rel="stylesheet" href="src/css/bootstrap.css">
+        <link rel="stylesheet" href="src/plugins/L.Control.Sidebar.css">
+        <link rel="stylesheet" href="src/plugins/easy-button.css">
+        <link rel="stylesheet" href="src/plugins/leaflet-styleeditor/css/Leaflet.StyleEditor.css">
+        <link rel="stylesheet" href="src/css/font-awesome.min.css">
+        <link rel="stylesheet" href="src/plugins/leaflet.awesome-markers.css">
+        <link rel="stylesheet" href="src/plugins/leaflet-mapkey/MapkeyIcons.css">
+        <link rel="stylesheet" href="src/plugins/leaflet-mapkey/L.Icon.Mapkey.css">
+        <link rel="stylesheet" href="src/plugins/MarkerCluster.css">
+        <link rel="stylesheet" href="src/plugins/MarkerCluster.Default.css">
+        <link rel="stylesheet" href="src/jquery-ui.min.css">
+        
+        <script src="src/leaflet-src.js"></script>
+        <script src="src/jquery-3.2.0.min.js"></script>
+        <script src="src/plugins/L.Control.Sidebar.js"></script>
+        <script src="src/plugins/easy-button.js"></script>
+        <script src="src/plugins/leaflet-providers.js"></script>
+        <script src="src/plugins/leaflet-styleeditor/javascript/Leaflet.StyleEditor.js"></script>
+        <script src="src/plugins/leaflet-styleeditor/javascript/Leaflet.StyleForms.js"></script>
+        <script src="src/plugins/leaflet.ajax.min.js"></script>
+        <script src="src/plugins/leaflet.sprite.js"></script>
+        <script src="src/plugins/leaflet.awesome-markers.min.js"></script>
+        <script src="src/plugins/leaflet-mapkey/L.Icon.Mapkey.js"></script>
+        <script src="src/plugins/leaflet.markercluster.js"></script>
+        <script src="src/jquery-ui.min.js"></script>
+
+        <!-- Load Esri Leaflet til dybdekort-->
+        <script src="https://unpkg.com/esri-leaflet@3.0.3/dist/esri-leaflet.js"
+        integrity="sha512-kuYkbOFCV/SsxrpmaCRMEFmqU08n6vc+TfAVlIKjR1BPVgt75pmtU9nbQll+4M9PN2tmZSAgD1kGUCKL88CscA=="
+        crossorigin=""></script>
+
+ 
+
+
+        <style>
+        /* Her kan der laves forskellige styles til de forskellige kort-elementer */
+            #mapdiv {
+                height:100vh;
+            }
+            #sidebardiv{
+                background-color:rgb(220, 220, 220);
+            }
+
+            .btn-top-sidebar{
+                margin-top: 15px;
+                color: rgb(55, 54, 54);
+                font: bold;
+                background-color: rgb(255, 255, 255);
+                border-color: black;
+                border-width: 1px;
+                position: absolute;
+                margin-bottom: 10px;
+            }
+
+            /* style for search*/
+            #divProject {
+                background-color: rgb(255, 255, 255);
+                padding: 8px;
+                border-style: solid;
+                border-width: 1px;
+
+            }
+
+             /* her overwrites padding i search og i andre bootstrap-classes*/
+            .col-xs-12, .col-xs-6, .col-xs-4 {
+                padding:1px;
+                
+            }
+
+            /* error i search*/
+            #errormsg {
+                padding: 0;
+                text-align: center;
+                background-color: rgb(255, 255, 255);
+            }
+
+            .bottompicker {
+                background-color: hsla(0,0%,5%,.55);
+                color: #fff;
+                cursor: pointer;
+                float: left;
+                font-family: Avenir,Arial,Helvetica,sans-serif;
+                font-size: 1.2em;
+                font-weight: 700;
+                line-height: 40px;
+                margin: 0px;
+                text-align: center;
+                width: 175px;
+                transform: translateY(-50%);
+                border-radius: 5px;
+                font-weight: normal;
+                border-style: dotted;
+                }
+
+            .zoombtn {
+            position: absolute;
+            width:75%;
+            height: 60px;
+            bottom: 5%;
+            left: 12%;
+            opacity: 0.9;
+            border-radius: 5px;
+            font-weight: normal;
+            font-size: x-large;
+            border-style: dotted;
+            color: #fff;
+            background-color: rgba(80, 80, 80, 0.55);
+            }
+
+            /* css for img-logo */
+
+            .img-fluid {
+            padding-top: 20px;
+            padding-bottom: 40px;
+            }
+            .citiesstyle {
+            color: red;
+            background-color: aquamarine;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <!-- Her indstilles bredden på kortet - 12 er hele skærmen -->
+        <div id="map-wrapper">
+             <div id="mapdiv" class="col-md-12"></div>
+
+     <!-- Her indstilles buttons i nedre højre hjørne            
+             <div id="button-wrapper" >
+                            <div class="leaflet-right leaflet-bottom"> 
+                   <input type="button" id="filterdybde1" value="Vanddybde" onclick="onoff()" class="leaflet-control  bottompicker "/>
+                   <input type="button" id="airfields" value="Satellit" class="btn btn-primary leaflet-control"> /> 
+                   <input type="checkbox" id="docks" value="docks" class="check"checked >docks />  
+ 
+                   <button id="filterdybde1" class="bottompicker leaflet-control"onclick="onoff()">Søg</button>
+                   <button id='filterdybde' class='bottompicker leaflet-control'>Zoom til start</button><br>
+
+            </div>  -->
+
+        <!-- Her styres sidebar -->
+        <div id="sidebardiv" class="col-md-3">
+
+        <!-- Her styres logo -->
+                <div 
+                    class="col-xs-12 padding-bottom-md img-fluid">
+                    <img src="img/CMN logo.png" 
+                    Width = 90%>
+
+            </div>
+            
+            <!-- Her styres html og bootstrap for search bar -->
+            <div id="divProject" class="col-xs-12">
+                <div id="divProjLabel" class="text-center col-xs-12">
+                    <h4 id="lblProject">Gå på opdagelse i Centerets projekter her</h4>
+                </div>
+                <div id="divProjectError" class="errorMsg col-xs-12"></div>
+                <div id="divFindProject" class="form-group">
+                    <div class="col-xs-9">
+                        <input type="text" id="txtFindProject" class="form-control" 
+                        placeholder="Navn på projekt">
+                    </div>
+                <div class="col-xs-3">
+                    <button id="btnFindproject" class="btn btn-primary btn-block">Søg</button>
+                </div>
+            </div>
+
+            <div>
+                <h4>
+                    <p>
+                        ... 
+                    </p>
+                </h4>
+                
+           <!-- Her styres html og bootstrap for filter button -->
+
+
+            </div>
+            <div id="divFilterProjekter" class="col-xs-12">
+                <div class="col-xs-6" >
+                   <input  type='radio' name='fltProjekter' value='Alle' checked >  <label  ><img src="/img/CMN logo.png" width="120px" alt="">     </label>
+                </div>
+                   <div class="col-xs-6">
+                </div>
+                    <input type='radio' name='fltProjekter' value='Stenrev'> <label  ><img src="/img/Stenrev.png" width="40px" alt="">    Stenrev </label> 
+                    </div>
+                    <div class="col-xs-6">
+                        <input type='radio' name='fltProjekter' value='Ålegræs' > <label  ><img src="/img/Ålegræs1.png" width="40px" alt="">    Ålegræs </label> 
+                    </div>
+                    <div class="col-xs-6">
+                        <input type='radio' name='fltProjekter' value='Muslingerev'> <label  ><img src="/img/muslinger.png" width="40px" alt="">    Muslingerev </label> 
+                    </div>
+                    <div class="col-xs-6">
+                        <input type='radio' name='fltProjekter' value='Sandcapping'> <label  ><img src="/img/Sandcapping.png" width="40px" alt="">    Sandcapping </label> 
+                    </div>
+                    <div class="col-xs-6">
+                        <input type='radio' name='fltProjekter' value='Eco Engineering'> <label  ><img src="/img/Eco.png" width="40px" alt="">    Eco Engineering </label> 
+                    </div>
+                    <div class="col-xs-6">
+                        <input type='radio' name='fltProjekter' value='Kystzonen'> <label  ><img src="/img/Kyst.png" width="40px" alt="">    Kystzonen </label> 
+                    </div>
+              </div>  
+             <button id='btnLocate' class='btn-lg btn-block zoombtn'>Zoom til start</button><br>
+
+            <div class"" id="divProjectData" ></div>
+        </div>
+        <script>
+        // Her opretttes variabelerne              
+            var mymap;
+            var lyrImagery
+            var lyrTopo
+            var ctrlLayers
+            var Overlays
+            var Basemaps
+            var ctlSidebar;
+            var ctlEasybutton;
+            var lyrProjekter;
+            var lyrCities;
+            var stenrev;
+            var muslingerev;
+            var sandcapping
+            var ecoEngineering
+            var aalegraes
+            var kystzonen
+            var lyrSearch
+            var arProjekterIDs = [];
+            var arCityIDs = [];
+
+            
+    $(document).ready(function(){
+
+        // Her indstilles ikonerne 
+            $(document).ready(function(){
+                stenrev = L.icon({iconUrl:'img/Stenrev.png', iconSize:[40,40], iconAnchor:[20,20]});
+                muslingerev = L.icon({iconUrl:'img/muslinger.png', iconSize:[40,40], iconAnchor:[20,20]});
+                sandcapping = L.icon({iconUrl:'img/Sandcapping.png', iconSize:[40,40], iconAnchor:[20,20]});
+                aalegraes = L.icon({iconUrl:'img/Ålegræs1.png', iconSize:[40,40], iconAnchor:[20,20]});
+                kystzonen = L.icon({iconUrl:'img/Kyst.png', iconSize:[40,40], iconAnchor:[20,20]});
+                ecoEngineering = L.icon({iconUrl:'img/Eco.png', iconSize:[40,40], iconAnchor:[20,20]});
+
+
+        // Her indstilles kortets startposition 
+                mymap = L.map('mapdiv', {center:[56.28, 11], zoom:7, attributionControl:false});
+               
+        //   *********** her oprettes baggrundslag **********      
+                lyrTopo = L.tileLayer.provider('Esri.WorldTopoMap');
+                lyrImagery = L.tileLayer.provider('Esri.WorldImagery');
+        
+        //   *********** her oprettes layer control **********      
+                
+                objBasemaps = {
+                    "Topografisk kort": lyrTopo,
+                    "Satellit": lyrImagery
+                };
+
+                objOverlays = {};
+                ctrlLayers = L.control.layers(objBasemaps,objOverlays).addTo(mymap);
+                mymap.addLayer(lyrImagery);
+
+        //   *********** her oprettes ekstra lag **********          
+                ctlSidebar = L.control.sidebar('sidebardiv').addTo(mymap);
+
+        //   *********** her oprettes easybutton til at få sidebar ud og ind **********          
+                ctlEasybutton = L.easyButton('glyphicon-transfer', function(){
+                   ctlSidebar.toggle(); 
+                }).addTo(mymap);
+            
+        //   *********** her oprettes attributes **********          
+                ctlAttribute = L.control.attribution().addTo(mymap);
+                ctlAttribute.addAttribution('&copy; <a href="https://www.limfjordsraadet.dk/">Henrik Rosenskjold</a>');
+                
+                ctlScale = L.control.scale({position:'bottomleft', metric:true,imperial:false, maxWidth:200}).addTo(mymap);
+
+        //   *********** her oprettes ekstra lag **********          
+                var dybde = L.esri.dynamicMapLayer({
+                url: "https://gis.aalborg.dk/akbms/rest/services/Limf/Limf_Dybde/MapServer",
+            
+            }).addTo(mymap);
+
+            
+        //   *********** her oprettes kortlag **********
+
+
+        lyrProjekter = L.geoJSON.ajax('data/projekter.geojson', {pointToLayer:returnProjekterMarker, onEachFeature:processProjekter, filter:filterProjekter}).addTo(mymap);
+        lyrProjekter.on('data:loaded', function(){
+                    arProjekterIDs.sort(function(a,b){return a-b});
+                    $("#txtFindProject").autocomplete({
+                        source:arProjekterIDs
+                    });
+                });
+
+
+/*cities fra online */
+
+//                $.getJSON('https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_10m_populated_places_simple.geojson', function(data) {
+// L.geoJson(data).addTo(mymap);
+//});
+
+        /* Onclick function hvor der zoomes til laget ved click*/
+
+        lyrProjekter.on('click', function (e) {
+            mymap.setView(e.latlng, 10);
+                });
+
+       // Her laves marker
+       function returnProjekterMarker(json, latlng){
+                var att = json.properties;
+                if (att.Type=='Stenrev') {
+                    var projekttype = stenrev;
+                }
+                else if (att.Type=='Muslingerev') {
+                var projekttype = muslingerev;
+                } 
+                else if (att.Type=='Ålegræs') {
+                var projekttype = aalegraes ;
+                } 
+                else if (att.Type=='Kystzonen') {
+                var projekttype = kystzonen ;
+                } 
+                else if (att.Type=='Eco Engineering') {
+                var projekttype = ecoEngineering ;
+                }
+                else {
+                    var projekttype = sandcapping;
+                }
+                return L.marker(latlng, {icon:projekttype})
+                }
+            })
+            });
+            //popdesigner bindTooltip for hvis ved hover, bindPopup for vis ved click
+            function processProjekter(json, lyr){
+                var att = json.properties;
+                lyr.bindPopup(	
+                    "<h4><strong><center>"+att.Type+"</center></strong></h4>"+
+                    "<h5><strong>Lokalitet: </strong>"+att.Lokalitet+"</h5>"+
+                    "<h5><strong>Aktører: </strong>"+att.Aktører+"</h5>"+
+                    "<h5><strong>Finansiering: </strong>"+att.Finansieri+"</h5>"+
+                    "<h5><strong>Areal: </strong>"+att.Areal+"</h5>"+
+                    "<h5><strong>Læs mere: </strong>"+"<b></b><a href="+att.Beskriv+">"+att.Lokalitet+"</a></h5>"
+                );
+               arProjekterIDs.push(att.Lokalitet.toString())
+            }
+
+  
+
+            
+         // her laves filter til kortlag - ikke en del af radiobuttons
+            function filterProjekter(json){
+                var att = json.properties;
+                if (att.Lokalitet=='False') {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            //er er locate button hvor "hjem" indstilles
+            $("#btnLocate").click(function(e){
+                mymap.setView(new L.LatLng(56.28, 9.5),8);
+
+
+            })
+            
+            // er er search funktionen
+            $("#txtFindProject").on('keyup paste', function(){
+                var val = $("#txtFindProject").val();
+                testLayerAttribute(arProjekterIDs, val, "Lokalitet", "#divFindProject", "#divProjectError", "#btnFindProject");
+            });
+            
+        // her zoomes til og defineres den ring der sættes om det søgte projekt  
+            
+            $("#btnFindproject").click(function(e){
+                var val = $("#txtFindProject").val();
+                var lyr = returnLayerByAttribute(lyrProjekter,'Lokalitet',val);
+                if (lyr) {
+                    if (lyrSearch) {
+                        lyrSearch.remove();
+                    }
+                     lyrSearch = L.circle(lyr.getLatLng(), {radius:1000, color:'red', weight:8, opacity:0.5, fillOpacity:0}).addTo(mymap);
+                    mymap.setView(lyr.getLatLng(), 12);
+
+                    var att = lyr.feature.properties;
+                    $("#divProjectData").html("<h3 class='text-center'>...</h3><h5>Lokalitet: "+att.Lokalitet+"</h5><h5>Beskrivelse: "+att.Beskriv+"</h5><h5>Finansiering: "+att.Finansieri+"</h5>");
+                    $("#divProjectError").html("");
+                } else {
+                    $("#divProjectError").html("**** Projektet kunne ikke findes ****");
+                }
+            });
+
+            // radio function
+
+            function filterProjekter(json){
+                var att=json.properties;
+                var optFilter = $("input[name=fltProjekter]:checked").val();
+                if(optFilter=="Alle"){
+                    return true;
+            } else {
+                return (att.Type==optFilter);
+            }
+            }
+            //radio button j-query
+           
+            $("#lblProject").click(function(){
+                $("#divProjectData").toggle(); 
+            });
+           
+            $("input[name=fltProjekter]").click(function(){
+                arProjekterIDs=[];
+                lyrProjekter.refresh();
+            });
+
+            //  ***********  General Functions til søgning og til at loope igennem geojson *********
+            
+            function LatLngToArrayString(ll) {
+                return "["+ll.lat.toFixed(5)+", "+ll.lng.toFixed(5)+"]";
+            }
+            
+            function returnLayerByAttribute(lyr,att,val) {
+                var arLayers = lyr.getLayers();
+                for (i=0;i<arLayers.length-1;i++) {
+                    var ftrVal = arLayers[i].feature.properties[att];
+                    if (ftrVal==val) {
+                        return arLayers[i];
+                    }
+                }
+                return false;
+            }
+            
+            function testLayerAttribute(ar, val, att, fg, err, btn) {
+                if (ar.indexOf(val)<0) {
+                    $(fg).addClass("has-error");
+            //        $(err).html("**** "+att+" NOT FOUND ****");
+            
+                    $(btn).attr("disabled", true);
+                } else {
+                    $(fg).removeClass("has-error");
+                    $(err).html("");
+                    $(btn).attr("disabled", false);
+                }
+            }
+
+            //radio button j-query
+           
+            $("#lblProject").click(function(){
+                $("#divProjectData").toggle(); 
+            });
+           
+            $("input[name=fltProjekter]").click(function(){
+                arProjekterIDs=[];
+                lyrProjekter.refresh();
+            });      
+
+ 
+
+
+                    </script> 
+
+
+    </body>
