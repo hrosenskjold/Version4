@@ -161,15 +161,15 @@
             <!-- Her styres html og bootstrap for search bar -->
             <div id="divProject" class="col-xs-12">
                 <div id="divProjLabel" class="text-center col-xs-12">
-                    <h4 id="lblProject">Gå på opdagelse i Centerets projekter her</h4>
+                    <h4 id="lblProject">Søg i marine naturgenopretningsprojekter her</h4>
                 </div>
                 <div id="divProjectError" class="errorMsg col-xs-12"></div>
                 <div id="divFindProject" class="form-group">
-                    <div class="col-xs-9">
+                    <div class="col-xs-8">
                         <input type="text" id="txtFindProject" class="form-control" 
                         placeholder="Navn på projekt">
                     </div>
-                <div class="col-xs-3">
+                <div class="col-xs-4">
                     <button id="btnFindproject" class="btn btn-primary btn-block">Søg</button>
                 </div>
             </div>
@@ -178,6 +178,7 @@
                 <h4>
                     <p>
                         ... 
+
                     </p>
                 </h4>
                 
@@ -186,30 +187,30 @@
 
             </div>
             <div id="divFilterProjekter" class="col-xs-12">
-                <div class="col-xs-6" >
-                   <input  type='radio' name='fltProjekter' value='Alle' checked >  <label  ><img src="img/CMN logo.png" width="120px" alt="">     </label>
+                <div class="col-xs-12" >
+                   <input  type='radio' name='fltProjekter' value='Alle' checked >  <label  ><img src="img/CMN logo1.png" width="50px" alt="">&nbsp&nbsp&nbsp Alle projekter</label>
                 </div>
-                   <div class="col-xs-6">
+                   <div class="col-xs-12">
                 </div>
-                    <input type='radio' name='fltProjekter' value='Stenrev'> <label  ><img src="img/Stenrev.png" width="40px" alt="">    Stenrev </label> 
+                    <input type='radio' name='fltProjekter' value='Stenrev'> <label  ><img src="img/Stenrev.png" width="50px" alt="">&nbsp&nbsp&nbsp Stenrev </label> 
                     </div>
-                    <div class="col-xs-6">
-                        <input type='radio' name='fltProjekter' value='Ålegræs' > <label  ><img src="img/Ålegræs1.png" width="40px" alt="">    Ålegræs </label> 
+                    <div class="col-xs-12">
+                        <input type='radio' name='fltProjekter' value='Ålegræs' > <label  ><img src="img/Ålegræs1.png" width="50px" alt="">&nbsp&nbsp&nbsp Ålegræs </label> 
                     </div>
-                    <div class="col-xs-6">
-                        <input type='radio' name='fltProjekter' value='Muslingerev'> <label  ><img src="img/muslinger.png" width="40px" alt="">    Muslingerev </label> 
+                    <div class="col-xs-12">
+                        <input type='radio' name='fltProjekter' value='Muslingerev'> <label  ><img src="img/muslinger.png" width="50px" alt="">&nbsp&nbsp&nbsp Muslingerev </label> 
                     </div>
-                    <div class="col-xs-6">
-                        <input type='radio' name='fltProjekter' value='Sandcapping'> <label  ><img src="img/Sandcapping.png" width="40px" alt="">    Sandcapping </label> 
+                    <div class="col-xs-12">
+                        <input type='radio' name='fltProjekter' value='Sandcapping'> <label  ><img src="img/Sandcapping.png" width="50px" alt="">&nbsp&nbsp&nbsp Sandcapping </label> 
                     </div>
-                    <div class="col-xs-6">
-                        <input type='radio' name='fltProjekter' value='Eco Engineering'> <label  ><img src="img/Eco.png" width="40px" alt="">    Eco Engineering </label> 
+                    <div class="col-xs-12">
+                        <input type='radio' name='fltProjekter' value='Eco Engineering'> <label  ><img src="img/Eco.png" width="50px" alt="">&nbsp&nbsp&nbsp  Eco Engineering </label> 
                     </div>
-                    <div class="col-xs-6">
-                        <input type='radio' name='fltProjekter' value='Kystzonen'> <label  ><img src="img/Kyst.png" width="40px" alt="">    Kystzonen </label> 
+                    <div class="col-xs-12">
+                        <input type='radio' name='fltProjekter' value='Kystzonen'> <label  ><img src="img/Kyst.png" width="50px" alt="">&nbsp&nbsp&nbsp  Kystzonen </label> 
                     </div>
               </div>  
-             <button id='btnLocate' class='btn-lg btn-block zoombtn'>Zoom til start</button><br>
+             <button id='btnLocate' class='btn-lg btn-block zoombtn'>Tilbage til kort</button><br>
 
             <div class"" id="divProjectData" ></div>
         </div>
@@ -365,10 +366,12 @@
 
             //er er locate button hvor "hjem" indstilles
             $("#btnLocate").click(function(e){
-                mymap.setView(new L.LatLng(56.28, 9.5),8);
+               mymap.setView(new L.LatLng(56.28, 9.5),8);
+                ctlSidebar.toggle(); 
+                })
 
 
-            })
+            
             
             // er er search funktionen
             $("#txtFindProject").on('keyup paste', function(){
