@@ -215,8 +215,10 @@
             <div class"" id="divProjectData" ></div>
         </div>
         <script>
+            
         // Her opretttes variabelerne              
             var mymap;
+            var wmsTopography
             var lyrImagery
             var lyrTopo
             var ctrlLayers
@@ -247,12 +249,15 @@
                 aalegraes = L.icon({iconUrl:'img/Ålegræs1.png', iconSize:[30,30], iconAnchor:[20,20]});
                 kystzonen = L.icon({iconUrl:'img/Kyst.png', iconSize:[30,30], iconAnchor:[20,20]});
                 ecoEngineering = L.icon({iconUrl:'img/Eco.png', iconSize:[30,30], iconAnchor:[20,20]});
-                
+
+
         // Her indstilles kortets startposition 
                 mymap = L.map('mapdiv', {center:[56.28, 11], zoom:7, attributionControl:false});
                
         //   *********** her oprettes baggrundslag **********      
-                lyrTopo = L.tileLayer.provider('Esri.WorldTopoMap');
+               
+        
+        lyrTopo = L.tileLayer.provider('Esri.WorldTopoMap');
                 lyrImagery = L.tileLayer.provider('Esri.WorldImagery');
         
         //   *********** her oprettes layer control **********      
@@ -264,7 +269,7 @@
 
                 objOverlays = {};
                 ctrlLayers = L.control.layers(objBasemaps,objOverlays).addTo(mymap);
-                mymap.addLayer(lyrImagery);
+             mymap.addLayer(lyrImagery);
 
         //   *********** her oprettes ekstra lag **********          
                 ctlSidebar = L.control.sidebar('sidebardiv').addTo(mymap);
@@ -281,10 +286,15 @@
                 ctlScale = L.control.scale({position:'bottomleft', metric:true,imperial:false, maxWidth:200}).addTo(mymap);
 
         //   *********** her oprettes ekstra lag **********          
-                var dybde = L.esri.dynamicMapLayer({
-                url: "https://gis.aalborg.dk/akbms/rest/services/Limf/Limf_Dybde/MapServer",
-            
-            }).addTo(mymap);
+    //    var dybde = L.esri.dynamicMapLayer({url: "https://gis.aalborg.dk/akbms/rest/services/Limf/Limf_Dybde/MapServer",}).addTo(mymap);
+
+
+       var wmsTopography = L.tileLayer.wms('https://api.dataforsyningen.dk/ddm?service=WMS?', {layers: 'ddm_50m_dybde_relief' ,  opacity:0.8,     format: 'image/png'
+, transparent: true,
+ zIndex:2}).addTo(mymap);
+
+  
+
 
             
         //   *********** her oprettes kortlag **********
