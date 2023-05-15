@@ -1,0 +1,84 @@
+/* Her kan der laves forskellige styles til de forskellige kort-elementer */
+    #mapdiv {
+        height:100vh;
+    }
+    #sidebardiv{
+        background-color:rgb(220, 220, 220);
+    }
+
+    .btn-top-sidebar{
+        margin-top: 15px;
+        color: rgb(55, 54, 54);
+        font: bold;
+        background-color: rgb(255, 255, 255);
+        border-color: black;
+        border-width: 1px;
+        position: absolute;
+        margin-bottom: 10px;
+    }
+
+    /* style for search*/
+    #divProject {
+        background-color: rgb(255, 255, 255);
+        padding: 8px;
+        border-style: solid;
+        border-width: 1px;
+
+    }
+
+     /* her overwrites padding i search og i andre bootstrap-classes*/
+    .col-xs-12, .col-xs-6, .col-xs-4 {
+        padding:1px;
+        
+    }
+
+    /* error i search*/
+    #errormsg {
+        padding: 0;
+        text-align: center;
+        background-color: rgb(255, 255, 255);
+    }
+
+    .bottompicker {
+        background-color: hsla(0,0%,5%,.55);
+        color: #fff;
+        cursor: pointer;
+        float: left;
+        font-family: Avenir,Arial,Helvetica,sans-serif;
+        font-size: 1.2em;
+        font-weight: 700;
+        line-height: 40px;
+        margin: 0px;
+        text-align: center;
+        width: 175px;
+        transform: translateY(-50%);
+        border-radius: 5px;
+        font-weight: normal;
+        border-style: dotted;
+        }
+
+    .zoombtn {
+    position: absolute;
+    width:75%;
+    height: 60px;
+    bottom: 5%;
+    left: 12%;
+    opacity: 0.9;
+    border-radius: 5px;
+    font-weight: normal;
+    font-size: x-large;
+    border-style: dotted;
+    color: #fff;
+    background-color: rgba(80, 80, 80, 0.55);
+    }
+
+    /* css for img-logo */
+
+    .img-fluid {
+    padding-top: 20px;
+    padding-bottom: 40px;
+    }
+    .citiesstyle {
+    color: red;
+    background-color: aquamarine;
+    }
